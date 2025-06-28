@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+</head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        min-height: 100vh;
+        color: #ffffff;
+        overflow-x: hidden;
+    }
+
+    /* Glassmorphism containers */
+    .dashboard-container {
+        min-height: 100vh;
+        backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .dashboard-header {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(30px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 1rem 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .dashboard-title {
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #ffffff, #e2e8f0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 2px 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .header-controls {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .search-box {
+        position: relative;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .search-box:focus-within {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: scale(1.02);
+    }
+
+    #search-input {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #ffffff;
+        font-size: 0.9rem;
+        width: 200px;
+    }
+
+    #search-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .search-icon {
+        opacity: 0.7;
+    }
+
+    .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .user-profile:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .profile-avatar {
+        width: 35px;
+        height: 35px;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #ffffff;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+    }
+
+    .profile-name {
+        font-weight: 500;
+        color: #ffffff;
+    }
+
+    .dashboard-main {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .widgets-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* Widget styling */
+    .widget {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .widget:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .widget-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .widget-header h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #ffffff;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .widget-icon {
+        font-size: 1.5rem;
+        opacity: 0.8;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.5rem;
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
+    }
+
+    /* Revenue Widget */
+    .revenue-amount {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .revenue-change {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .change-positive {
+        color: #10b981;
+        font-weight: 600;
+        background: rgba(16, 185, 129, 0.1);
+        padding: 0.25rem 0.5rem;
+        border-radius: 15px;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .change-period {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+    }
+
+    .mini-chart {
+        height: 40px;
+        background: linear-gradient(90deg, rgba(16, 185, 129, 0.3), rgba(34, 197, 94, 0.1));
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .mini-chart::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    /* Users Widget */
+    .users-count {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 1rem;
+    }
+
+    .users-status {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .status-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    .status-dot.online {
+        background: #10b981;
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    }
+
+    .status-dot.offline {
+        background: #6b7280;
+        box-shadow: 0 0 10px rgba(107, 114, 128, 0.5);
+    }
+
+    .users-chart {
+        display: flex;
+        align-items: end;
+        gap: 0.5rem;
+        height: 50px;
+    }
+
+    .chart-bar {
+        flex: 1;
+        background: linear-gradient(to top, #4f46e5, #7c3aed);
+        border-radius: 4px 4px 0 0;
+        animation: barGrow 1s ease-out;
+        transition: all 0.3s ease;
+    }
+
+    .chart-bar:hover {
+        background: linear-gradient(to top, #6366f1, #8b5cf6);
+        transform: scaleY(1.1);
+    }
+
+    /* Performance Widget */
+    .performance-metrics {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .metric {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .metric-label {
+        width: 60px;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 500;
+    }
+
+    .metric-bar {
+        flex: 1;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .metric-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #10b981, #34d399);
+        border-radius: 10px;
+        position: relative;
+        animation: fillAnimation 2s ease-out;
+    }
+
+    .metric-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    .metric-value {
+        width: 40px;
+        text-align: right;
+        font-weight: 600;
+        color: #ffffff;
+        font-size: 0.9rem;
+    }
+
+    /* Activity Widget */
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .activity-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+    }
+
+    .activity-dot {
+        width: 8px;
+        height: 8px;
+        background: #4f46e5;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+        animation: pulse 2s infinite;
+    }
+
+    .activity-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .activity-text {
+        color: #ffffff;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .activity-time {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.8rem;
+    }
+
+    /* Chart Widget */
+    .chart-widget {
+        grid-column: span 2;
+    }
+
+    .chart-controls {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .chart-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .chart-btn:hover,
+    .chart-btn.active {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .chart-container {
+        height: 200px;
+        margin-top: 1rem;
+    }
+
+    .chart-svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .chart-line {
+        fill: none;
+        stroke: #4f46e5;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        filter: drop-shadow(0 0 10px rgba(79, 70, 229, 0.5));
+        animation: drawLine 2s ease-out;
+    }
+
+    .chart-area {
+        fill: url(#chartGradient);
+        animation: fillArea 2s ease-out;
+    }
+
+    /* Actions Widget */
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .action-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: #ffffff;
+    }
+
+    .action-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .action-icon {
+        font-size: 1.5rem;
+        opacity: 0.9;
+    }
+
+    .action-text {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    /* Background Animation */
+    .background-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .floating-shape {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        animation: float 20s infinite ease-in-out;
+    }
+
+    .shape-1 {
+        width: 100px;
+        height: 100px;
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .shape-2 {
+        width: 150px;
+        height: 150px;
+        top: 60%;
+        right: 15%;
+        animation-delay: -5s;
+    }
+
+    .shape-3 {
+        width: 80px;
+        height: 80px;
+        bottom: 20%;
+        left: 60%;
+        animation-delay: -10s;
+    }
+
+    .shape-4 {
+        width: 120px;
+        height: 120px;
+        top: 10%;
+        right: 40%;
+        animation-delay: -15s;
+    }
+
+    /* Animations */
+    @keyframes gradientShift {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0px) translateX(0px) rotate(0deg);
+        }
+
+        25% {
+            transform: translateY(-20px) translateX(10px) rotate(5deg);
+        }
+
+        50% {
+            transform: translateY(0px) translateX(20px) rotate(10deg);
+        }
+
+        75% {
+            transform: translateY(20px) translateX(10px) rotate(5deg);
+        }
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 0.7;
+            transform: scale(1.1);
+        }
+    }
+
+    @keyframes shimmer {
+        0% {
+            left: -100%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    @keyframes barGrow {
+        0% {
+            height: 0;
+        }
+
+        100% {
+            height: var(--height, 50%);
+        }
+    }
+
+    @keyframes fillAnimation {
+        0% {
+            width: 0;
+        }
+
+        100% {
+            width: var(--width, 50%);
+        }
+    }
+
+    @keyframes drawLine {
+        0% {
+            stroke-dasharray: 0 1000;
+        }
+
+        100% {
+            stroke-dasharray: 1000 0;
+        }
+    }
+
+    @keyframes fillArea {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .chart-widget {
+            grid-column: span 1;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-header {
+            padding: 1rem;
+        }
+
+        .header-content {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .dashboard-title {
+            font-size: 1.5rem;
+        }
+
+        .dashboard-main {
+            padding: 1rem;
+        }
+
+        .widgets-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .search-box {
+            width: 100%;
+        }
+
+        #search-input {
+            width: 100%;
+        }
+
+        .actions-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1 class="dashboard-title">Analytics Dashboard</h1>
+                <div class="header-controls">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search..." id="search-input">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <div class="user-profile">
+                        <div class="profile-avatar">CC</div>
+                        <span class="profile-name">Chetan Chauhan</span>
+
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <div class="widgets-grid">
+                <!-- Revenue Widget -->
+                <div class="widget revenue-widget">
+                    <div class="widget-header">
+                        <h3>Total Revenue</h3>
+                        <span class="widget-icon">💰</span>
+                    </div>
+                    <div class="widget-content">
+                        <div class="revenue-amount">$124,580</div>
+                        <div class="revenue-change">
+                            <span class="change-positive">+12.5%</span>
+                            <span class="change-period">vs last month</span>
+                        </div>
+                        <div class="mini-chart" id="revenue-chart"></div>
+                    </div>
+                </div>
+
+                <!-- Users Widget -->
+                <div class="widget users-widget">
+                    <div class="widget-header">
+                        <h3>Active Users</h3>
+                        <span class="widget-icon">👥</span>
+                    </div>
+                    <div class="widget-content">
+                        <div class="users-count">8,492</div>
+                        <div class="users-status">
+                            <div class="status-item">
+                                <span class="status-dot online"></span>
+                                <span>2,847 Online</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-dot offline"></span>
+                                <span>5,645 Offline</span>
+                            </div>
+                        </div>
+                        <div class="users-chart">
+                            <div class="chart-bar" style="height: 60%"></div>
+                            <div class="chart-bar" style="height: 80%"></div>
+                            <div class="chart-bar" style="height: 45%"></div>
+                            <div class="chart-bar" style="height: 90%"></div>
+                            <div class="chart-bar" style="height: 70%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Widget -->
+                <div class="widget performance-widget">
+                    <div class="widget-header">
+                        <h3>Performance</h3>
+                        <span class="widget-icon">⚡</span>
+                    </div>
+                    <div class="widget-content">
+                        <div class="performance-metrics">
+                            <div class="metric">
+                                <span class="metric-label">CPU</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 65%"></div>
+                                </div>
+                                <span class="metric-value">65%</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Memory</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 42%"></div>
+                                </div>
+                                <span class="metric-value">42%</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Storage</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 78%"></div>
+                                </div>
+                                <span class="metric-value">78%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Widget -->
+                <div class="widget activity-widget">
+                    <div class="widget-header">
+                        <h3>Recent Activity</h3>
+                        <span class="widget-icon">📊</span>
+                    </div>
+                    <div class="widget-content">
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-dot"></div>
+                                <div class="activity-content">
+                                    <span class="activity-text">New user registered</span>
+                                    <span class="activity-time">2 min ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot"></div>
+                                <div class="activity-content">
+                                    <span class="activity-text">Payment processed</span>
+                                    <span class="activity-time">5 min ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot"></div>
+                                <div class="activity-content">
+                                    <span class="activity-text">Server backup completed</span>
+                                    <span class="activity-time">12 min ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot"></div>
+                                <div class="activity-content">
+                                    <span class="activity-text">Database optimized</span>
+                                    <span class="activity-time">1 hour ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Chart Widget -->
+                <div class="widget chart-widget">
+                    <div class="widget-header">
+                        <h3>Analytics Overview</h3>
+                        <div class="chart-controls">
+                            <button class="chart-btn active">7D</button>
+                            <button class="chart-btn">30D</button>
+                            <button class="chart-btn">90D</button>
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        <div class="chart-container" id="main-chart">
+                            <div class="chart-area">
+                                <svg class="chart-svg" viewBox="0 0 400 200">
+                                    <defs>
+                                        <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:0.8" />
+                                            <stop offset="100%" style="stop-color:#4f46e5;stop-opacity:0.1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <path class="chart-line"
+                                        d="M 0 160 Q 50 120 100 140 T 200 100 T 300 120 T 400 80" />
+                                    <path class="chart-area"
+                                        d="M 0 160 Q 50 120 100 140 T 200 100 T 300 120 T 400 80 L 400 200 L 0 200 Z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions Widget -->
+                <div class="widget actions-widget">
+                    <div class="widget-header">
+                        <h3>Quick Actions</h3>
+                        <span class="widget-icon">⚙️</span>
+                    </div>
+                    <div class="widget-content">
+                        <div class="actions-grid">
+                            <button class="action-btn">
+                                <span class="action-icon">📤</span>
+                                <span class="action-text">Export Data</span>
+                            </button>
+                            <button class="action-btn">
+                                <span class="action-icon">🔄</span>
+                                <span class="action-text">Sync</span>
+                            </button>
+                            <button class="action-btn">
+                                <span class="action-icon">🛠️</span>
+                                <span class="action-text">Settings</span>
+                            </button>
+                            <button class="action-btn">
+                                <span class="action-icon">📝</span>
+                                <span class="action-text">Reports</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="background-animation">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+        <div class="floating-shape shape-4"></div>
+    </div>
+    <script>
+
+        class GlassmorphismDashboard {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.setupInteractiveElements();
+                this.startAnimations();
+                this.setupChartInteractions();
+                this.createDynamicEffects();
+                this.setupSearchFunctionality();
+            }
+
+            setupInteractiveElements() {
+                // Widget hover effects
+                const widgets = document.querySelectorAll('.widget');
+                widgets.forEach(widget => {
+                    widget.addEventListener('mouseenter', () => {
+                        this.addWidgetGlow(widget);
+                    });
+
+                    widget.addEventListener('mouseleave', () => {
+                        this.removeWidgetGlow(widget);
+                    });
+
+                    widget.addEventListener('click', () => {
+                        this.createRippleEffect(widget, event);
+                    });
+                });
+
+                // Action buttons
+                const actionBtns = document.querySelectorAll('.action-btn');
+                actionBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.triggerActionEffect(btn);
+                    });
+                });
+
+                // Chart period buttons
+                const chartBtns = document.querySelectorAll('.chart-btn');
+                chartBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.switchChartPeriod(btn);
+                    });
+                });
+
+                // Profile dropdown simulation
+                const userProfile = document.querySelector('.user-profile');
+                userProfile.addEventListener('click', () => {
+                    this.showProfileMenu();
+                });
+            }
+
+            addWidgetGlow(widget) {
+                widget.style.boxShadow = `
+            0 12px 40px rgba(0, 0, 0, 0.15),
+            0 0 30px rgba(255, 255, 255, 0.1),
+            inset 0 0 30px rgba(255, 255, 255, 0.05)
+        `;
+                widget.style.border = '1px solid rgba(255, 255, 255, 0.4)';
+            }
+
+            removeWidgetGlow(widget) {
+                widget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.1)';
+                widget.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+            }
+
+            createRippleEffect(element, event) {
+                const rect = element.getBoundingClientRect();
+                const ripple = document.createElement('div');
+                const size = Math.max(rect.width, rect.height);
+                const x = event.clientX - rect.left - size / 2;
+                const y = event.clientY - rect.top - size / 2;
+
+                ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            left: ${x}px;
+            top: ${y}px;
+            pointer-events: none;
+            animation: rippleExpand 0.6s ease-out forwards;
+            z-index: 10;
+        `;
+
+                element.style.position = 'relative';
+                element.appendChild(ripple);
+
+                setTimeout(() => ripple.remove(), 600);
+            }
+
+            triggerActionEffect(btn) {
+                const icon = btn.querySelector('.action-icon');
+                const text = btn.querySelector('.action-text');
+
+                // Icon spin effect
+                icon.style.transform = 'rotate(360deg) scale(1.2)';
+                icon.style.transition = 'transform 0.5s ease';
+
+                // Text glow effect
+                text.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.8)';
+                text.style.transition = 'text-shadow 0.3s ease';
+
+                // Button pulse
+                btn.style.transform = 'scale(0.95)';
+
+                setTimeout(() => {
+                    icon.style.transform = 'rotate(0deg) scale(1)';
+                    text.style.textShadow = 'none';
+                    btn.style.transform = 'scale(1)';
+
+                    // Show action feedback
+                    this.showActionFeedback(btn);
+                }, 200);
+            }
+
+            showActionFeedback(btn) {
+                const feedback = document.createElement('div');
+                const actionText = btn.querySelector('.action-text').textContent;
+
+                feedback.textContent = `${actionText} executed!`;
+                feedback.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 500;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: slideInRight 0.3s ease-out forwards;
+            z-index: 1000;
+        `;
+
+                document.body.appendChild(feedback);
+
+                setTimeout(() => {
+                    feedback.style.animation = 'slideOutRight 0.3s ease-in forwards';
+                    setTimeout(() => feedback.remove(), 300);
+                }, 2000);
+            }
+
+            switchChartPeriod(clickedBtn) {
+                // Remove active class from all buttons
+                document.querySelectorAll('.chart-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // Add active class to clicked button
+                clickedBtn.classList.add('active');
+
+                // Animate chart update
+                this.updateChart(clickedBtn.textContent);
+            }
+
+            updateChart(period) {
+                const chartLine = document.querySelector('.chart-line');
+                const chartArea = document.querySelector('.chart-area');
+
+                // Generate new chart data based on period
+                const paths = {
+                    '7D': 'M 0 160 Q 50 120 100 140 T 200 100 T 300 120 T 400 80',
+                    '30D': 'M 0 180 Q 50 140 100 120 T 200 90 T 300 110 T 400 70',
+                    '90D': 'M 0 170 Q 50 130 100 150 T 200 110 T 300 100 T 400 60'
+                };
+
+                const areaPath = paths[period] + ' L 400 200 L 0 200 Z';
+
+                // Animate path change
+                chartLine.style.strokeDasharray = '0 1000';
+                chartArea.style.opacity = '0';
+
+                setTimeout(() => {
+                    chartLine.setAttribute('d', paths[period]);
+                    chartArea.setAttribute('d', areaPath);
+
+                    chartLine.style.strokeDasharray = '1000 0';
+                    chartArea.style.opacity = '1';
+                }, 300);
+            }
+
+            startAnimations() {
+                // Animate revenue counter
+                this.animateCounter('.revenue-amount', 124580, '$', 2000);
+                this.animateCounter('.users-count', 8492, '', 1500);
+
+                // Animate progress bars
+                this.animateProgressBars();
+
+                // Start real-time updates
+                this.startRealTimeUpdates();
+
+                // Animate chart bars
+                setTimeout(() => {
+                    this.animateChartBars();
+                }, 500);
+            }
+
+            animateCounter(selector, targetValue, prefix = '', duration = 2000) {
+                const element = document.querySelector(selector);
+                if (!element) return;
+
+                let currentValue = 0;
+                const increment = targetValue / (duration / 16);
+
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= targetValue) {
+                        currentValue = targetValue;
+                        clearInterval(timer);
+                    }
+
+                    const displayValue = prefix + Math.floor(currentValue).toLocaleString();
+                    element.textContent = displayValue;
+                }, 16);
+            }
+
+            animateProgressBars() {
+                const metrics = document.querySelectorAll('.metric');
+
+                metrics.forEach((metric, index) => {
+                    const fill = metric.querySelector('.metric-fill');
+                    const currentWidth = fill.style.width;
+
+                    fill.style.width = '0%';
+
+                    setTimeout(() => {
+                        fill.style.transition = 'width 1.5s ease-out';
+                        fill.style.width = currentWidth;
+                    }, index * 200);
+                });
+            }
+
+            animateChartBars() {
+                const bars = document.querySelectorAll('.chart-bar');
+
+                bars.forEach((bar, index) => {
+                    const targetHeight = bar.style.height;
+                    bar.style.height = '0%';
+
+                    setTimeout(() => {
+                        bar.style.transition = 'height 0.8s ease-out';
+                        bar.style.height = targetHeight;
+                    }, index * 100);
+                });
+            }
+
+            startRealTimeUpdates() {
+                // Update activity feed
+                setInterval(() => {
+                    this.addNewActivity();
+                }, 8000);
+
+                // Update metrics randomly
+                setInterval(() => {
+                    this.updateMetrics();
+                }, 5000);
+
+                // Update status indicators
+                setInterval(() => {
+                    this.updateStatusIndicators();
+                }, 3000);
+            }
+
+            addNewActivity() {
+                const activities = [
+                    'New user registered',
+                    'Payment processed',
+                    'Report generated',
+                    'Backup completed',
+                    'Security scan finished',
+                    'Data synchronized'
+                ];
+
+                const activityList = document.querySelector('.activity-list');
+                const firstItem = activityList.querySelector('.activity-item');
+
+                if (firstItem) {
+                    const newActivity = firstItem.cloneNode(true);
+                    const text = newActivity.querySelector('.activity-text');
+                    const time = newActivity.querySelector('.activity-time');
+
+                    text.textContent = activities[Math.floor(Math.random() * activities.length)];
+                    time.textContent = 'just now';
+
+                    // Add entrance animation
+                    newActivity.style.opacity = '0';
+                    newActivity.style.transform = 'translateX(-20px)';
+                    newActivity.style.transition = 'all 0.5s ease-out';
+
+                    activityList.insertBefore(newActivity, firstItem);
+
+                    setTimeout(() => {
+                        newActivity.style.opacity = '1';
+                        newActivity.style.transform = 'translateX(0)';
+                    }, 100);
+
+                    // Remove last item if too many
+                    const items = activityList.querySelectorAll('.activity-item');
+                    if (items.length > 4) {
+                        const lastItem = items[items.length - 1];
+                        lastItem.style.opacity = '0';
+                        lastItem.style.transform = 'translateX(20px)';
+                        setTimeout(() => lastItem.remove(), 500);
+                    }
+                }
+            }
+
+            updateMetrics() {
+                const metrics = document.querySelectorAll('.metric');
+
+                metrics.forEach(metric => {
+                    const fill = metric.querySelector('.metric-fill');
+                    const value = metric.querySelector('.metric-value');
+
+                    const currentPercent = parseInt(value.textContent);
+                    const newPercent = Math.max(10, Math.min(95, currentPercent + (Math.random() - 0.5) * 20));
+
+                    fill.style.width = newPercent + '%';
+                    value.textContent = Math.round(newPercent) + '%';
+
+                    // Color based on value
+                    if (newPercent > 80) {
+                        fill.style.background = 'linear-gradient(90deg, #ef4444, #f87171)';
+                    } else if (newPercent > 60) {
+                        fill.style.background = 'linear-gradient(90deg, #f59e0b, #fbbf24)';
+                    } else {
+                        fill.style.background = 'linear-gradient(90deg, #10b981, #34d399)';
+                    }
+                });
+            }
+
+            updateStatusIndicators() {
+                const onlineCount = document.querySelectorAll('.status-item')[0];
+                const offlineCount = document.querySelectorAll('.status-item')[1];
+
+                const totalUsers = 8492;
+                const onlineUsers = Math.floor(Math.random() * 1000) + 2000;
+                const offlineUsers = totalUsers - onlineUsers;
+
+                onlineCount.innerHTML = `
+            <span class="status-dot online"></span>
+            <span>${onlineUsers.toLocaleString()} Online</span>
+        `;
+
+                offlineCount.innerHTML = `
+            <span class="status-dot offline"></span>
+            <span>${offlineUsers.toLocaleString()} Offline</span>
+        `;
+            }
+
+            setupSearchFunctionality() {
+                const searchInput = document.getElementById('search-input');
+
+                searchInput.addEventListener('input', (e) => {
+                    this.handleSearch(e.target.value);
+                });
+
+                searchInput.addEventListener('focus', () => {
+                    searchInput.parentElement.style.transform = 'scale(1.05)';
+                });
+
+                searchInput.addEventListener('blur', () => {
+                    searchInput.parentElement.style.transform = 'scale(1)';
+                });
+            }
+
+            handleSearch(query) {
+                if (query.length > 2) {
+                    // Simulate search results
+                    this.showSearchResults(query);
+                } else {
+                    this.hideSearchResults();
+                }
+            }
+
+            showSearchResults(query) {
+                let searchResults = document.querySelector('.search-results');
+
+                if (!searchResults) {
+                    searchResults = document.createElement('div');
+                    searchResults.className = 'search-results';
+                    searchResults.style.cssText = `
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(30px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 15px;
+                margin-top: 0.5rem;
+                padding: 1rem;
+                z-index: 1000;
+                animation: slideInDown 0.3s ease-out;
+            `;
+
+                    document.querySelector('.search-box').appendChild(searchResults);
+                }
+
+                searchResults.innerHTML = `
+            <div style="color: #ffffff; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                Search results for "${query}":
+            </div>
+            <div style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem;">
+                • Analytics Dashboard<br>
+                • User Management<br>
+                • Performance Metrics
+            </div>
+        `;
+            }
+
+            hideSearchResults() {
+                const searchResults = document.querySelector('.search-results');
+                if (searchResults) {
+                    searchResults.style.animation = 'slideOutUp 0.3s ease-in';
+                    setTimeout(() => searchResults.remove(), 300);
+                }
+            }
+
+            showProfileMenu() {
+                const profileMenu = document.createElement('div');
+                profileMenu.className = 'profile-menu';
+                profileMenu.style.cssText = `
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            margin-top: 0.5rem;
+            padding: 1rem;
+            min-width: 200px;
+            z-index: 1000;
+            animation: slideInDown 0.3s ease-out;
+            color: #ffffff;
+        `;
+
+                profileMenu.innerHTML = `
+            <div style="font-weight: 600; margin-bottom: 0.5rem;">John Doe</div>
+            <div style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">john@example.com</div>
+            <div style="border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 0.5rem; font-size: 0.9rem;">
+                <div style="padding: 0.5rem 0; cursor: pointer;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">Profile Settings</div>
+                <div style="padding: 0.5rem 0; cursor: pointer;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">Preferences</div>
+                <div id="logout" style="padding: 0.5rem 0; cursor: pointer;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">Logout</div>
+            </div>
+        `;
+
+                const userProfile = document.querySelector('.user-profile');
+                userProfile.style.position = 'relative';
+                userProfile.appendChild(profileMenu);
+
+                // Remove menu when clicking outside
+                setTimeout(() => {
+                    document.addEventListener('click', function removeMenu(e) {
+                        if (!userProfile.contains(e.target)) {
+                            profileMenu.style.animation = 'slideOutUp 0.3s ease-in';
+                            setTimeout(() => profileMenu.remove(), 300);
+                            document.removeEventListener('click', removeMenu);
+                        }
+                    });
+                }, 100);
+                
+                document.getElementById("logout").addEventListener("click", function() {
+                            window.location.href = "http://localhost:3000/logout";
+                        });
+            }
+
+
+
+            createDynamicEffects() {
+                // Add CSS animations
+                const style = document.createElement('style');
+                style.textContent = `
+            @keyframes rippleExpand {
+                0% { transform: scale(0); opacity: 1; }
+                100% { transform: scale(4); opacity: 0; }
+            }
+            
+            @keyframes slideInRight {
+                0% { transform: translateX(100%); opacity: 0; }
+                100% { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOutRight {
+                0% { transform: translateX(0); opacity: 1; }
+                100% { transform: translateX(100%); opacity: 0; }
+            }
+            
+            @keyframes slideInDown {
+                0% { transform: translateY(-10px); opacity: 0; }
+                100% { transform: translateY(0); opacity: 1; }
+            }
+            
+            @keyframes slideOutUp {
+                0% { transform: translateY(0); opacity: 1; }
+                100% { transform: translateY(-10px); opacity: 0; }
+            }
+        `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new GlassmorphismDashboard();
+
+            // Add page load animation
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 1s ease-out';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('search-input').focus();
+            }
+        });
+
+    </script>
+</body>
+
+</html>
