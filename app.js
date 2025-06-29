@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const session = require('express-session');
 const Homepage=require('./routes/index');
+const cookieParser = require('cookie-parser');
 const path=require('path');
 
 require('dotenv').config();
 
 const app = express();
+app.use(cookieParser());
 app.set('view engine', 'ejs');
 const PORT = process.env.PORT || 5000;
 
